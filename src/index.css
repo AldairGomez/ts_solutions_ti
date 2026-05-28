@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-primary: #1b61f2;
+  --color-secondary: #3b3b89;
+  --color-tertiary: #15b1a8;
+  --color-background-light: #f5f6f8;
+  --color-background-dark: #101622;
+  --color-card-dark: #1b222e;
+  --color-surface-dark: #1c2727;
+  --color-border-dark: #283939;
+  --color-text-muted: #9db9b9;
+
+  --font-display: "Space Grotesk", sans-serif;
+  --font-body: "Noto Sans", sans-serif;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6, .font-display {
+  font-family: var(--font-display);
+}
+
+/* Custom map styling to enforce dark mode look on placeholder */
+.dark-map-filter {
+  filter: grayscale(100%) invert(90%) hue-rotate(180deg) contrast(120%) brightness(80%);
+}
