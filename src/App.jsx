@@ -9,7 +9,7 @@ import Contact from './pages/Contact';
 function App() {
   return (
     <LanguageProvider>
-      <Router basename="/ts_solutions_ti">
+      <Router>
         <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white transition-colors duration-200 min-h-screen flex flex-col overflow-x-hidden font-body selection:bg-primary selection:text-white">
           <Header />
           <Routes>
