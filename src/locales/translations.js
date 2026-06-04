@@ -92,6 +92,23 @@ export const translations = {
       formMessage: 'Mensaje',
       formMessagePlaceholder: 'Cuéntanos sobre tu proyecto...',
       formBtn: 'Obtener Cotización Gratuita',
+    },
+    chatbot: {
+      greetingMorning: '¡Hola! Buenos días',
+      greetingAfternoon: '¡Hola! Buenas tardes',
+      greetingEvening: '¡Hola! Buenas noches',
+      helpOffer: 'Te puedo ayudar con cualquier consulta',
+      proactiveHelp: '¿Necesitas ayuda? Pregúntame',
+      openChatAria: 'Abrir Chat',
+      botTitle: 'Asistente Virtual',
+      botSubtitle: 'Respuestas simuladas',
+      inputPlaceholder: 'Escribe un mensaje...',
+      initialMessage: '¡Hola! Soy el asistente virtual de Solutions TI. ¿En qué puedo ayudarte hoy?',
+      fallbackMessage: 'Por supuesto, si necesitas hablar con un experto puedes contactarnos directamente tocando aquí:',
+      fallbackButton: 'Escribir',
+      simulatedReply: 'Entiendo. Como esta es una versión de prueba, aún no estoy conectado a la IA real. ¡Pero pronto lo estaré!',
+      servicesReply: 'En Solutions TI ofrecemos desarrollo web moderno, consultoría TI y soluciones empresariales. ¿Te interesa alguno en particular?',
+      helloReply: '¡Hola nuevamente! ¿Cómo puedo asistirte el día de hoy?'
     }
   },
   en: {
@@ -187,6 +204,23 @@ export const translations = {
       formMessage: 'Message',
       formMessagePlaceholder: 'Tell us about your project...',
       formBtn: 'Get a Free Quote',
+    },
+    chatbot: {
+      greetingMorning: 'Hi! Good morning',
+      greetingAfternoon: 'Hi! Good afternoon',
+      greetingEvening: 'Hi! Good evening',
+      helpOffer: 'I can help you with any questions',
+      proactiveHelp: 'Need help? Just ask me',
+      openChatAria: 'Open Chat',
+      botTitle: 'Virtual Assistant',
+      botSubtitle: 'Simulated responses',
+      inputPlaceholder: 'Type a message...',
+      initialMessage: 'Hi! I am the virtual assistant for Solutions TI. How can I help you today?',
+      fallbackMessage: 'Of course, if you need to speak with an expert you can contact us directly by clicking here:',
+      fallbackButton: 'Message',
+      simulatedReply: 'I understand. As this is a test version, I am not connected to the real AI yet. But I will be soon!',
+      servicesReply: 'At Solutions TI we offer modern web development, IT consulting, and enterprise solutions. Are you interested in a specific one?',
+      helloReply: 'Hello again! How can I assist you today?'
     }
   }
 };

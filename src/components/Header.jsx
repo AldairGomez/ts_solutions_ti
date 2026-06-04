@@ -20,7 +20,7 @@ export default function Header() {
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-[#282e39] bg-white/80 dark:bg-[#111318]/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-[#282e39]/50 bg-white/50 dark:bg-[#111318]/50 backdrop-blur-xl">
       <div className="px-4 md:px-10 lg:px-40 py-3 mx-auto max-w-[1440px] relative">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
