@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import logo from '../assets/logo-icon.png';
 
@@ -53,9 +54,20 @@ export default function Header() {
                 aria-label="Toggle Theme"
                 title={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               >
-                <span className="material-symbols-outlined text-[20px]">
-                  {isDarkMode ? 'light_mode' : 'dark_mode'}
-                </span>
+                <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={isDarkMode ? 'dark' : 'light'}
+                      initial={{ y: -20, opacity: 0, rotate: -90 }}
+                      animate={{ y: 0, opacity: 1, rotate: 0 }}
+                      exit={{ y: 20, opacity: 0, rotate: 90 }}
+                      transition={{ duration: 0.3, ease: "anticipate" }}
+                      className="material-symbols-outlined text-[20px] absolute"
+                    >
+                      {isDarkMode ? 'light_mode' : 'dark_mode'}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
               </button>
             </div>
           </nav>
@@ -69,9 +81,20 @@ export default function Header() {
               </button>
               <div className="w-px h-4 bg-gray-300 dark:bg-gray-700"></div>
               <button onClick={toggleTheme} className="flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-primary transition-colors">
-                <span className="material-symbols-outlined text-[20px]">
-                  {isDarkMode ? 'light_mode' : 'dark_mode'}
-                </span>
+                <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={isDarkMode ? 'dark' : 'light'}
+                      initial={{ y: -20, opacity: 0, rotate: -90 }}
+                      animate={{ y: 0, opacity: 1, rotate: 0 }}
+                      exit={{ y: 20, opacity: 0, rotate: 90 }}
+                      transition={{ duration: 0.3, ease: "anticipate" }}
+                      className="material-symbols-outlined text-[20px] absolute"
+                    >
+                      {isDarkMode ? 'light_mode' : 'dark_mode'}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
               </button>
             </div>
 

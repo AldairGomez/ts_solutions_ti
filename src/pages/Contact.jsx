@@ -1,10 +1,23 @@
 import { useLanguage } from '../context/LanguageContext';
+import { motion } from 'framer-motion';
 
 export default function Contact() {
   const { t } = useLanguage();
 
+  const pageVariants = {
+    initial: { opacity: 0, y: 15 },
+    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+    exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
+  };
+
   return (
-    <main className="flex-grow flex flex-col justify-center py-12 lg:py-20 px-6 lg:px-8">
+    <motion.main 
+      className="flex-grow flex flex-col justify-center py-12 lg:py-20 px-6 lg:px-8"
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      variants={pageVariants}
+    >
       <div className="w-full max-w-7xl mx-auto">
         {/* Page Heading */}
         <div className="mb-12 lg:mb-16">
@@ -117,6 +130,6 @@ export default function Contact() {
           </div>
         </div>
       </div>
-    </main>
+    </motion.main>
   );
 }
