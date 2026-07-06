@@ -86,7 +86,7 @@ export default function CustomChatbot() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error en el servidor');
+        throw new Error(data.details || data.error || 'Error en el servidor');
       }
 
       // Agregamos la respuesta real del bot
