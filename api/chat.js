@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { COMPANY_KNOWLEDGE } from './knowledge.js';
 
 export default async function handler(req, res) {
   // CORS configuration for local development and specific domains
@@ -58,11 +59,7 @@ export default async function handler(req, res) {
 
     const systemPrompt = {
       role: 'system',
-      content: `Eres el asistente virtual oficial de TS Solutions TI. Tu tono debe ser profesional, amable y conciso. 
-La empresa se dedica a soluciones de tecnología de la información, ciberseguridad, redes, infraestructura y desarrollo de software.
-Responde de manera precisa a las consultas de los clientes y guíalos a contactar a un asesor humano si requieren algo muy específico o un presupuesto.
-Nunca reveles que eres un modelo de lenguaje de inteligencia artificial, siempre preséntate como el asistente de TS Solutions TI.
-Trata de que tus respuestas sean cortas y al punto (máximo 2-3 párrafos cortos) para que se lean bien en la pequeña ventana del chat.`
+      content: COMPANY_KNOWLEDGE
     };
 
     const formattedHistory = (history || []).map(msg => ({

@@ -42,10 +42,10 @@ export default function Footer() {
             {t.footer.rights}
           </p>
           <div className="flex gap-4">
-            <a className="text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
-              <span className="material-symbols-outlined">public</span>
+            <a className="text-slate-400 dark:text-slate-500 hover:text-[#25D366] transition-colors" href="https://wa.me/51968094072" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <span className="material-symbols-outlined">chat</span>
             </a>
-            <a className="text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+            <a className="text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="mailto:tssolutionsti@gmail.com" aria-label="Email">
               <span className="material-symbols-outlined">mail</span>
             </a>
           </div>
