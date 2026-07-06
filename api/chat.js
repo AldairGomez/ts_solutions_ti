@@ -47,7 +47,7 @@ export default async function handler(req, res) {
     } else if (hasGroq) {
       apiKey = process.env.GROQ_API_KEY;
       baseURL = 'https://api.groq.com/openai/v1';
-      modelName = 'llama3-8b-8192'; // Modelo open-source súper rápido y gratis
+      modelName = 'llama-3.3-70b-versatile'; // Modelo actualizado (el anterior fue retirado)
     } else {
       apiKey = process.env.OPENAI_API_KEY;
       baseURL = 'https://api.openai.com/v1';
