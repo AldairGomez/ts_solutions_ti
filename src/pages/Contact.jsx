@@ -34,12 +34,12 @@ export default function Contact() {
           <div className="flex flex-col gap-8 order-2 lg:order-1">
             {/* Contact Info Cards */}
             <div className="grid gap-6">
-              <div className="flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-surface-dark text-primary border border-slate-200 dark:border-border-dark">
-                  <span className="material-symbols-outlined">location_on</span>
+              <div className="flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors group">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/20 group-hover:bg-[#8B5CF6] group-hover:text-white transition-colors">
+                  <span className="material-symbols-outlined">schedule</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{t.contact.hqTitle}</h3>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-[#8B5CF6] transition-colors">{t.contact.hqTitle}</h3>
                   <p className="text-slate-600 dark:text-text-muted leading-relaxed">{t.contact.hqDesc1}<br />{t.contact.hqDesc2}</p>
                 </div>
               </div>
@@ -63,17 +63,7 @@ export default function Contact() {
               </a>
             </div>
 
-            {/* Map Container */}
-            <a href="https://maps.app.goo.gl/S2GraHLpy7Pp1Nuq7" target="_blank" rel="noopener noreferrer" className="relative w-full h-[300px] rounded-2xl overflow-hidden border border-slate-200 dark:border-border-dark group block cursor-pointer">
-              <div className="absolute inset-0 bg-slate-100 dark:bg-surface-dark flex items-center justify-center">
-                <img alt="Map" className="w-full h-full object-cover dark:dark-map-filter opacity-70 group-hover:opacity-100 transition-opacity duration-500 scale-100 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSAl-MHlTdzg9WTSNa1Zr1ipIRkYnZ9oMBsRStXOHpSkvmsth-1KUxa36PAslahYwVHYw3h7S_Y8XEoXzU590eBRbYl9XB0JtcULVT3VawxKNNJvKjGuPcg4dzEvRD41NFxWZ5gSax1U5hHo7qyHb63sYIZBpZwz_k7HXHXvwxVGbREZ5zvqSclrA2SbW7ZbH2ZAeXTXEH2B_crTWmx158JcsScSIB5PpZk6O45nnac3AaTZQnaxQHmYmNqLV8MC-pvOcfehMsOY74" />
-                <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/10 transition-colors z-10"></div>
-              </div>
-              <div className="absolute bottom-4 left-4 bg-white/90 dark:bg-background-dark/90 backdrop-blur px-4 py-2 rounded-lg border border-slate-200 dark:border-border-dark flex items-center gap-2 z-20 group-hover:border-primary/50 transition-colors">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">{t.contact.mapLabel}</span>
-              </div>
-            </a>
+
           </div>
 
           {/* Right Column: Form */}
