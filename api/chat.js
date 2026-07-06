@@ -26,19 +26,35 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Message is required' });
     }
 
-    // Configure the client dynamically. 
-    // It prioritizes DeepSeek if the key exists, otherwise falls back to OpenAI
-    const isDeepseek = !!process.env.DEEPSEEK_API_KEY;
-    const apiKey = isDeepseek ? process.env.DEEPSEEK_API_KEY : process.env.OPENAI_API_KEY;
+    // Detectar qué API Key configuró el usuario en Vercel
+    const hasGemini = !!process.env.GEMINI_API_KEY;
+    const hasGroq = !!process.env.GROQ_API_KEY;
+    const hasOpenAI = !!process.env.OPENAI_API_KEY;
     
-    if (!apiKey) {
+    if (!hasGemini && !hasGroq && !hasOpenAI) {
       return res.status(500).json({ error: 'API keys are not configured on the server.' });
     }
 
-    const client = new OpenAI({
-      apiKey: apiKey,
-      baseURL: isDeepseek ? 'https://api.deepseek.com' : 'https://api.openai.com/v1',
-    });
+    // Configurar el cliente dependiendo del servicio elegido
+    let apiKey = '';
+    let baseURL = '';
+    let modelName = '';
+
+    if (hasGemini) {
+      apiKey = process.env.GEMINI_API_KEY;
+      baseURL = 'https://generativelanguage.googleapis.com/v1beta/openai/';
+      modelName = 'gemini-1.5-flash';
+    } else if (hasGroq) {
+      apiKey = process.env.GROQ_API_KEY;
+      baseURL = 'https://api.groq.com/openai/v1';
+      modelName = 'llama3-8b-8192'; // Modelo open-source súper rápido y gratis
+    } else {
+      apiKey = process.env.OPENAI_API_KEY;
+      baseURL = 'https://api.openai.com/v1';
+      modelName = 'gpt-4o-mini';
+    }
+
+    const client = new OpenAI({ apiKey, baseURL });
 
     const systemPrompt = {
       role: 'system',
@@ -49,7 +65,6 @@ Nunca reveles que eres un modelo de lenguaje de inteligencia artificial, siempre
 Trata de que tus respuestas sean cortas y al punto (máximo 2-3 párrafos cortos) para que se lean bien en la pequeña ventana del chat.`
     };
 
-    // Format previous history so the AI remembers the context of the conversation
     const formattedHistory = (history || []).map(msg => ({
       role: msg.role === 'bot' ? 'assistant' : 'user',
       content: msg.textKey ? "Mensaje del sistema: " + msg.textKey : msg.text
@@ -60,8 +75,6 @@ Trata de que tus respuestas sean cortas y al punto (máximo 2-3 párrafos cortos
       ...formattedHistory,
       { role: 'user', content: message }
     ];
-
-    const modelName = isDeepseek ? 'deepseek-chat' : 'gpt-4o-mini';
 
     const response = await client.chat.completions.create({
       model: modelName,
