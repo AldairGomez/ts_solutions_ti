@@ -67,23 +67,37 @@ export default function CustomChatbot() {
     setIsLoading(true);
 
     // ==========================================
-    // SIMULACIÓN ACTUAL (Maneja palabras clave en ES y EN)
+    // INTEGRACIÓN CON API SERVERLESS (VERCEL)
     // ==========================================
-    setTimeout(() => {
-      let botReplyKey = 'simulatedReply';
-      
-      const lowerInput = userMessage.toLowerCase();
-      if (lowerInput.includes('asesor') || lowerInput.includes('humano') || lowerInput.includes('whatsapp') || lowerInput.includes('contacto') || lowerInput.includes('advisor') || lowerInput.includes('human') || lowerInput.includes('contact')) {
-        botReplyKey = 'fallbackMessage';
-      } else if (lowerInput.includes('servicio') || lowerInput.includes('hacen') || lowerInput.includes('dedican') || lowerInput.includes('service') || lowerInput.includes('do you do')) {
-        botReplyKey = 'servicesReply';
-      } else if (lowerInput.includes('hola') || lowerInput.includes('buenas') || lowerInput.includes('hi') || lowerInput.includes('hello')) {
-        botReplyKey = 'helloReply';
+    try {
+      // Usamos ruta relativa porque en Vercel el backend y frontend conviven en el mismo dominio
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // Enviamos el mensaje actual y el historial previo
+        body: JSON.stringify({ 
+          message: userMessage,
+          history: messages.slice(-6) // Enviamos los últimos 6 mensajes para contexto
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error en el servidor');
       }
 
-      setMessages((prev) => [...prev, { role: 'bot', textKey: botReplyKey }]);
+      // Agregamos la respuesta real del bot
+      setMessages((prev) => [...prev, { role: 'bot', text: data.reply }]);
+    } catch (error) {
+      console.error('Error al enviar el mensaje:', error);
+      // Fallback si la API falla o no está disponible
+      setMessages((prev) => [...prev, { role: 'bot', textKey: 'fallbackMessage' }]);
+    } finally {
       setIsLoading(false);
-    }, 1500); 
+    }
   };
 
   // Helper para obtener el saludo basado en la hora actual y el idioma
