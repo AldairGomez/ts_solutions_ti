@@ -93,8 +93,12 @@ export default function CustomChatbot() {
       setMessages((prev) => [...prev, { role: 'bot', text: data.reply }]);
     } catch (error) {
       console.error('Error al enviar el mensaje:', error);
-      // Fallback si la API falla o no está disponible
-      setMessages((prev) => [...prev, { role: 'bot', textKey: 'fallbackMessage' }]);
+      // Mostramos el error real en pantalla para poder diagnosticar el problema en Vercel
+      setMessages((prev) => [
+        ...prev, 
+        { role: 'bot', text: `⚠️ Error de conexión: ${error.message}. Por favor revisa los Logs en Vercel o la consola de tu navegador.` },
+        { role: 'bot', textKey: 'fallbackMessage' }
+      ]);
     } finally {
       setIsLoading(false);
     }
