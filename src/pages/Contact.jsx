@@ -1,8 +1,16 @@
+import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { motion } from 'framer-motion';
 
 export default function Contact() {
   const { t } = useLanguage();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText('tssolutionsti@gmail.com');
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const pageVariants = {
     initial: { opacity: 0, y: 15 },
@@ -52,15 +60,23 @@ export default function Contact() {
                   <p className="text-slate-600 dark:text-text-muted leading-relaxed">{t.contact.phoneDesc1}<br />{t.contact.phoneDesc2}</p>
                 </div>
               </a>
-              <a href="mailto:tssolutionsti@gmail.com" className="flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors group cursor-pointer">
+              <div onClick={handleCopyEmail} className="relative flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors group cursor-pointer">
+                {/* Tooltip */}
+                <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+                  <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold py-1.5 px-3 rounded shadow-lg whitespace-nowrap">
+                    {copied ? t.contact.emailCopied : t.contact.copyEmail}
+                  </div>
+                  <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 border-4 border-transparent border-t-slate-900 dark:border-t-white"></div>
+                </div>
+
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 group-hover:bg-primary group-hover:text-white transition-colors">
-                  <span className="material-symbols-outlined">mail</span>
+                  <span className="material-symbols-outlined">{copied ? 'check' : 'mail'}</span>
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 group-hover:text-primary transition-colors">{t.contact.supportTitle}</h3>
                   <p className="text-slate-600 dark:text-text-muted leading-relaxed">{t.contact.supportDesc1}<br />{t.contact.supportDesc2}</p>
                 </div>
-              </a>
+              </div>
             </div>
 
 
