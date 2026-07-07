@@ -29,3 +29,50 @@ h1, h2, h3, h4, h5, h6, .font-display {
 .dark-map-filter {
   filter: grayscale(100%) invert(90%) hue-rotate(180deg) contrast(120%) brightness(80%);
 }
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    box-shadow: 0 0 0 0 rgba(27, 97, 242, 0.5);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 40px rgba(27, 97, 242, 0);
+  }
+  100% {
+    transform: scale(0.8);
+    box-shadow: 0 0 0 0 rgba(27, 97, 242, 0);
+  }
+}
+
+.animate-voice-pulse {
+  animation: pulse-ring 1.5s infinite;
+}
+
+/* Custom Scrollbar para el Chatbot */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(157, 185, 185, 0.4) transparent;
+}
+.dark .custom-scrollbar {
+  scrollbar-color: var(--color-border-dark) transparent;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(157, 185, 185, 0.4);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(157, 185, 185, 0.7);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--color-border-dark);
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(157, 185, 185, 0.5);
+}

@@ -21,7 +21,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { message, history } = req.body;
+    const { message, history, language } = req.body;
 
     if (!message) {
       return res.status(400).json({ error: 'Message is required' });
@@ -57,9 +57,13 @@ export default async function handler(req, res) {
 
     const client = new OpenAI({ apiKey, baseURL });
 
+    const languageRule = language === 'en' 
+      ? "\n\nREGLA DE IDIOMA OBLIGATORIA: El usuario está utilizando la interfaz en INGLÉS. Debes responder a TODAS sus preguntas única y exclusivamente en INGLÉS. Traduce toda tu información al inglés antes de responder."
+      : "\n\nREGLA DE IDIOMA OBLIGATORIA: El usuario está utilizando la interfaz en ESPAÑOL. Debes responder a TODAS sus preguntas única y exclusivamente en ESPAÑOL.";
+
     const systemPrompt = {
       role: 'system',
-      content: COMPANY_KNOWLEDGE
+      content: COMPANY_KNOWLEDGE + languageRule + "\n\nREGLA MUY IMPORTANTE 1: Tus respuestas deben ser cortas, directas y concisas. Máximo 1 o 2 oraciones. Ve directo al grano simulando una conversación hablada rápida.\nREGLA MUY IMPORTANTE 2: SOLO si el usuario SOLICITA explícitamente comunicarse con un asesor o pide contactos, NUNCA escribas el número o correo en texto, sino que añade EXACTAMENTE la palabra [CONTACT_CARDS] al final de tu respuesta. NO incluyas esta palabra si no piden contacto.\nREGLA MUY IMPORTANTE 3: Limítate ESTRICTAMENTE a la información pública de la empresa. Si te hacen preguntas ajenas a TS Solutions TI, obvia la pregunta indicando respetuosamente que solo puedes brindar información relevante sobre la empresa y sus servicios."
     };
 
     const formattedHistory = (history || []).map(msg => ({

@@ -110,7 +110,11 @@ export const translations = {
       fallbackButton: 'Escribir',
       simulatedReply: 'Entiendo. Como esta es una versión de prueba, aún no estoy conectado a la IA real. ¡Pero pronto lo estaré!',
       servicesReply: 'En Solutions TI ofrecemos desarrollo web moderno, consultoría TI y soluciones empresariales. ¿Te interesa alguno en particular?',
-      helloReply: '¡Hola nuevamente! ¿Cómo puedo asistirte el día de hoy?'
+      helloReply: '¡Hola nuevamente! ¿Cómo puedo asistirte el día de hoy?',
+      voiceListening: 'Te escucho...',
+      voiceThinking: 'Pensando...',
+      voiceSpeaking: 'Hablando... (Toca para interrumpir)',
+      emailCopied: '¡Correo Copiado!'
     }
   },
   en: {
@@ -224,7 +228,11 @@ export const translations = {
       fallbackButton: 'Message',
       simulatedReply: 'I understand. As this is a test version, I am not connected to the real AI yet. But I will be soon!',
       servicesReply: 'At Solutions TI we offer modern web development, IT consulting, and enterprise solutions. Are you interested in a specific one?',
-      helloReply: 'Hello again! How can I assist you today?'
+      helloReply: 'Hello again! How can I assist you today?',
+      voiceListening: 'Listening...',
+      voiceThinking: 'Thinking...',
+      voiceSpeaking: 'Speaking... (Tap to interrupt)',
+      emailCopied: 'Email Copied!'
     }
   }
 };
