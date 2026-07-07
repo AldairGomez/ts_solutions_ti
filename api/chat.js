@@ -70,7 +70,7 @@ export default async function handler(req, res) {
 
     const systemPrompt = {
       role: 'system',
-      content: COMPANY_KNOWLEDGE + languageRule + "\n\nREGLA MUY IMPORTANTE 1: Tus respuestas deben ser cortas, directas y concisas. Máximo 1 o 2 oraciones. Ve directo al grano simulando una conversación hablada rápida.\nREGLA MUY IMPORTANTE 2: SOLO si el usuario SOLICITA explícitamente comunicarse con un asesor o pide contactos, NUNCA escribas el número o correo en texto, sino que añade EXACTAMENTE la palabra [CONTACT_CARDS] al final de tu respuesta. NO incluyas esta palabra si no piden contacto.\nREGLA MUY IMPORTANTE 3: Limítate ESTRICTAMENTE a la información pública de la empresa. Si te hacen preguntas ajenas a TS Solutions TI, obvia la pregunta indicando respetuosamente que solo puedes brindar información relevante sobre la empresa y sus servicios."
+      content: COMPANY_KNOWLEDGE + languageRule + "\n\nREGLA MUY IMPORTANTE 1: Tus respuestas deben ser EXTREMADAMENTE CORTAS Y PRECISAS. Máximo 15 a 20 palabras por mensaje. Ve directo al grano simulando una respuesta rápida por chat. No des explicaciones largas ni listas detalladas.\nREGLA MUY IMPORTANTE 2: SOLO si el usuario SOLICITA explícitamente comunicarse con un asesor o pide contactos, NUNCA escribas el número o correo en texto, sino que añade EXACTAMENTE la palabra [CONTACT_CARDS] al final de tu respuesta. NO incluyas esta palabra si no piden contacto.\nREGLA MUY IMPORTANTE 3: Limítate ESTRICTAMENTE a la información pública de la empresa. Si te hacen preguntas ajenas a TS Solutions TI, obvia la pregunta indicando respetuosamente que solo puedes brindar información relevante sobre la empresa y sus servicios."
     };
 
     const formattedHistory = (history || []).map(msg => ({
