@@ -7,7 +7,16 @@ import logo from '../assets/logo-icon.png';
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -21,7 +30,11 @@ export default function Header() {
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200/50 dark:border-[#282e39]/50 bg-white/50 dark:bg-[#111318]/50 backdrop-blur-xl">
+    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      isScrolled 
+        ? 'border-b border-gray-200/50 dark:border-[#282e39]/50 bg-white/80 dark:bg-[#111318]/80 backdrop-blur-xl shadow-sm'
+        : 'border-b border-transparent bg-transparent'
+    }`}>
       <div className="px-4 md:px-10 lg:px-40 py-3 mx-auto max-w-[1440px] relative">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2 sm:gap-3 group">

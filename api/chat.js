@@ -39,20 +39,27 @@ export default async function handler(req, res) {
     // Configurar el cliente dependiendo del servicio elegido
     let apiKey = '';
     let baseURL = '';
-    let modelName = '';
+    let modelsToTry = [];
 
     if (hasGemini) {
       apiKey = process.env.GEMINI_API_KEY;
       baseURL = 'https://generativelanguage.googleapis.com/v1beta/openai/';
-      modelName = 'gemini-1.5-flash';
+      modelsToTry = ['gemini-1.5-flash'];
     } else if (hasGroq) {
       apiKey = process.env.GROQ_API_KEY;
       baseURL = 'https://api.groq.com/openai/v1';
-      modelName = 'llama-3.3-70b-versatile'; // Modelo actualizado (el anterior fue retirado)
+      modelsToTry = [
+        'llama-3.3-70b-versatile',
+        'llama-3.1-8b-instant',
+        'qwen/qwen3-32b',
+        'meta-llama/llama-4-scout-17b-16e-instruct',
+        'openai/gpt-oss-120b',
+        'allam-2-7b'
+      ];
     } else {
       apiKey = process.env.OPENAI_API_KEY;
       baseURL = 'https://api.openai.com/v1';
-      modelName = 'gpt-4o-mini';
+      modelsToTry = ['gpt-4o-mini'];
     }
 
     const client = new OpenAI({ apiKey, baseURL });
@@ -77,12 +84,33 @@ export default async function handler(req, res) {
       { role: 'user', content: message }
     ];
 
-    const response = await client.chat.completions.create({
-      model: modelName,
-      messages: messages,
-      max_tokens: 500,
-      temperature: 0.7,
-    });
+    let response = null;
+    let lastError = null;
+
+    for (const currentModel of modelsToTry) {
+      try {
+        response = await client.chat.completions.create({
+          model: currentModel,
+          messages: messages,
+          max_tokens: 500,
+          temperature: 0.7,
+        });
+        break; // Éxito! Salimos del bucle
+      } catch (error) {
+        lastError = error;
+        // Si el error es 429 (Rate Limit / Tokens agotados), intentamos con el siguiente modelo
+        if (error.status === 429) {
+          console.warn(`[Fallback] Límite 429 alcanzado en el modelo ${currentModel}. Cambiando al siguiente...`);
+          continue;
+        }
+        // Si es cualquier otro tipo de error, detenemos el proceso
+        throw error;
+      }
+    }
+
+    if (!response) {
+      throw lastError || new Error("Se agotaron todos los modelos y no se obtuvo respuesta.");
+    }
 
     const reply = response.choices[0].message.content;
 
