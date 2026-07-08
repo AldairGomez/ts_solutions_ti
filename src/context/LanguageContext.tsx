@@ -12,13 +12,18 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 export function LanguageProvider({ children }: { children: ReactNode }) {
   // Check localStorage for saved language or default to 'es'
   const [language, setLanguage] = useState<string>(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return savedLanguage ? savedLanguage : 'es';
+    if (typeof window !== 'undefined') {
+      const savedLanguage = localStorage.getItem('language');
+      return savedLanguage ? savedLanguage : 'es';
+    }
+    return 'es';
   });
 
   // Save to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('language', language);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('language', language);
+    }
   }, [language]);
 
   const toggleLanguage = () => {
