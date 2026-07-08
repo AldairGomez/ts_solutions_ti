@@ -1,10 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 
+export interface Message {
+  role: 'bot' | 'user';
+  textKey?: string;
+  text?: string;
+}
+
 export default function CustomChatbot() {
   const { t, language } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     { role: 'bot', textKey: 'initialMessage' }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -15,8 +21,8 @@ export default function CustomChatbot() {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isVoiceModeSession, setIsVoiceModeSession] = useState(false);
   
-  const messagesEndRef = useRef(null);
-  const recognitionRef = useRef(null);
+  const messagesEndRef = useRef<any>(null);
+  const recognitionRef = useRef<any>(null);
 
   // Auto-restart listening if in voice session and not busy
   useEffect(() => {
@@ -78,7 +84,7 @@ export default function CustomChatbot() {
     }
   };
 
-  const handleSendMessage = async (e, forcedText = null, fromVoice = false) => {
+  const handleSendMessage = async (e: any, forcedText: string | null = null, fromVoice = false) => {
     e?.preventDefault();
     const textToSend = forcedText || inputValue;
     if (!textToSend.trim()) return;
@@ -121,7 +127,7 @@ export default function CustomChatbot() {
       if (fromVoice) {
         speakText(data.reply);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error al enviar el mensaje:', error);
       // Mostramos el error real en pantalla para poder diagnosticar el problema en Vercel
       setMessages((prev) => [
@@ -138,7 +144,7 @@ export default function CustomChatbot() {
   // FUNCIONES DE VOZ (Web Speech API)
   // ==========================================
   const startListening = () => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const SpeechRecognition: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SpeechRecognition) {
       alert(language === 'en' ? "Voice recognition not supported in this browser." : "El reconocimiento de voz no está soportado en este navegador.");
       return;
@@ -162,13 +168,13 @@ export default function CustomChatbot() {
       setIsListening(true);
     };
 
-    recognition.onresult = (event) => {
+    recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       // Enviamos el mensaje automáticamente al terminar de hablar
       handleSendMessage(null, transcript, true);
     };
 
-    recognition.onerror = (event) => {
+    recognition.onerror = (event: any) => {
       console.error("Speech error", event);
       setIsListening(false);
     };
@@ -180,7 +186,7 @@ export default function CustomChatbot() {
     recognition.start();
   };
 
-  const speakText = (text) => {
+  const speakText = (text: string) => {
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel(); // Detener si estaba hablando
 
@@ -216,14 +222,14 @@ export default function CustomChatbot() {
     }
   };
 
-  const handleCopyEmail = (e) => {
+  const handleCopyEmail = (e: any) => {
     e.preventDefault();
     navigator.clipboard.writeText('tssolutionsti@gmail.com');
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
   };
 
-  const exitVoiceMode = (e) => {
+  const exitVoiceMode = (e: any) => {
     e.stopPropagation();
     setIsVoiceModeSession(false);
     if (isSpeaking) {
@@ -335,7 +341,7 @@ export default function CustomChatbot() {
         {/* Área de Mensajes */}
         <div className="relative flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4 bg-gray-50/50 dark:bg-[#1a1d24]/50">
           {messages.map((msg, idx) => {
-            let messageContent = msg.textKey ? t.chatbot[msg.textKey] : msg.text;
+            let messageContent = msg.textKey ? t.chatbot[msg.textKey as keyof typeof t.chatbot] : msg.text;
             const hasContactCards = typeof messageContent === 'string' && messageContent.includes('[CONTACT_CARDS]');
             if (hasContactCards) {
                messageContent = messageContent.replace('[CONTACT_CARDS]', '').trim();

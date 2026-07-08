@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 
 export default function FloatingSocials() {
   const [isClicked, setIsClicked] = useState(false);
-  const clickTimeoutRef = useRef(null);
+  const clickTimeoutRef = useRef<number | null>(null);
 
   const handleClick = () => {
     setIsClicked((prev) => {

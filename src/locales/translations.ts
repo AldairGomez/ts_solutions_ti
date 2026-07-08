@@ -236,3 +236,5 @@ export const translations = {
     }
   }
 };
+
+export type TranslationDict = typeof translations.es;

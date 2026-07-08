@@ -1,9 +1,10 @@
 import OpenAI from 'openai';
 import { COMPANY_KNOWLEDGE } from './knowledge.js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-export default async function handler(req, res) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS configuration for local development and specific domains
-  res.setHeader('Access-Control-Allow-Credentials', true);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
@@ -42,11 +43,11 @@ export default async function handler(req, res) {
     let modelsToTry = [];
 
     if (hasGemini) {
-      apiKey = process.env.GEMINI_API_KEY;
+      apiKey = process.env.GEMINI_API_KEY as string;
       baseURL = 'https://generativelanguage.googleapis.com/v1beta/openai/';
       modelsToTry = ['gemini-1.5-flash'];
     } else if (hasGroq) {
-      apiKey = process.env.GROQ_API_KEY;
+      apiKey = process.env.GROQ_API_KEY as string;
       baseURL = 'https://api.groq.com/openai/v1';
       modelsToTry = [
         'llama-3.3-70b-versatile',
@@ -57,7 +58,7 @@ export default async function handler(req, res) {
         'allam-2-7b'
       ];
     } else {
-      apiKey = process.env.OPENAI_API_KEY;
+      apiKey = process.env.OPENAI_API_KEY as string;
       baseURL = 'https://api.openai.com/v1';
       modelsToTry = ['gpt-4o-mini'];
     }
@@ -73,7 +74,7 @@ export default async function handler(req, res) {
       content: COMPANY_KNOWLEDGE + languageRule + "\n\nREGLA MUY IMPORTANTE 1: Tus respuestas deben ser EXTREMADAMENTE CORTAS Y PRECISAS. Máximo 15 a 20 palabras por mensaje. Ve directo al grano simulando una respuesta rápida por chat. No des explicaciones largas ni listas detalladas.\nREGLA MUY IMPORTANTE 2: SOLO si el usuario SOLICITA explícitamente comunicarse con un asesor o pide contactos, NUNCA escribas el número o correo en texto, sino que añade EXACTAMENTE la palabra [CONTACT_CARDS] al final de tu respuesta. NO incluyas esta palabra si no piden contacto.\nREGLA MUY IMPORTANTE 3: Limítate ESTRICTAMENTE a la información pública de la empresa. Si te hacen preguntas ajenas a TS Solutions TI, obvia la pregunta indicando respetuosamente que solo puedes brindar información relevante sobre la empresa y sus servicios."
     };
 
-    const formattedHistory = (history || []).map(msg => ({
+    const formattedHistory = (history || []).map((msg: any) => ({
       role: msg.role === 'bot' ? 'assistant' : 'user',
       content: msg.textKey ? "Mensaje del sistema: " + msg.textKey : msg.text
     }));
@@ -96,10 +97,10 @@ export default async function handler(req, res) {
           temperature: 0.7,
         });
         break; // Éxito! Salimos del bucle
-      } catch (error) {
+      } catch (error: any) {
         lastError = error;
         // Si el error es 429 (Rate Limit / Tokens agotados), intentamos con el siguiente modelo
-        if (error.status === 429) {
+        if (error.status === 429 || error?.response?.status === 429) {
           console.warn(`[Fallback] Límite 429 alcanzado en el modelo ${currentModel}. Cambiando al siguiente...`);
           continue;
         }
@@ -115,8 +116,8 @@ export default async function handler(req, res) {
     const reply = response.choices[0].message.content;
 
     return res.status(200).json({ reply });
-  } catch (error) {
-    console.error('Chatbot API Error:', error);
-    return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+  } catch (error: any) {
+    console.error('Error in chat API:', error);
+    return res.status(500).json({ error: 'Hubo un error procesando tu solicitud.', details: error.message });
   }
 }

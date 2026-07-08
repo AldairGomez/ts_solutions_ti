@@ -3,7 +3,7 @@ import Particles, { ParticlesProvider } from "@tsparticles/react";
 import { loadFull } from "tsparticles";
 
 export default function ParticleBackground() {
-  const particlesInit = useCallback(async (engine) => {
+  const particlesInit = useCallback(async (engine: any) => {
     await loadFull(engine);
   }, []);
 

@@ -6,14 +6,14 @@ export default function Home() {
   const { t } = useLanguage();
 
   // Variantes para la transición de página
-  const pageVariants = {
+  const pageVariants: any = {
     initial: { opacity: 0, y: 15 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
     exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
   };
 
   // Variantes para el efecto cascada (stagger) del Hero
-  const heroContainerVariants = {
+  const heroContainerVariants: any = {
     initial: { opacity: 0 },
     animate: {
       opacity: 1,
@@ -21,7 +21,7 @@ export default function Home() {
     }
   };
 
-  const heroItemVariants = {
+  const heroItemVariants: any = {
     initial: { opacity: 0, y: 30 },
     animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
   };

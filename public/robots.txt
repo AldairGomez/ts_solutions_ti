@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ts-solutions-ti.vercel.app/sitemap.xml
