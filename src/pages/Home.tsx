@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
+import TechMarquee from '../components/TechMarquee';
 
 export default function Home() {
   const { t, language } = useLanguage();
@@ -71,16 +72,7 @@ export default function Home() {
                 </button>
               </motion.div>
               
-              {/* Trust indicators */}
-              <motion.div variants={heroItemVariants} className="pt-8 flex flex-col gap-3">
-                <p className="text-sm text-slate-500 font-medium">{t.home.trustText}</p>
-                <div className="flex gap-6 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-                  <div className="flex items-center gap-1 font-bold text-xl"><span className="material-symbols-outlined">html</span> HTML5</div>
-                  <div className="flex items-center gap-1 font-bold text-xl"><span className="material-symbols-outlined">css</span> CSS3</div>
-                  <div className="flex items-center gap-1 font-bold text-xl"><span className="material-symbols-outlined">javascript</span> JS</div>
-                  <div className="flex items-center gap-1 font-bold text-xl"><span className="material-symbols-outlined">database</span> SQL</div>
-                </div>
-              </motion.div>
+              {/* Tech Stack Marquee (Now rendered below the hero block) */}
             </motion.div>
             
             {/* Image Content */}
@@ -111,6 +103,16 @@ export default function Home() {
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Tech Marquee Full Width */}
+      <section className="bg-white dark:bg-[#111318] border-b border-slate-200 dark:border-[#282e39]">
+        <div className="max-w-[1440px] mx-auto py-8">
+          <div className="text-center mb-6">
+            <p className="text-sm text-slate-500 font-bold tracking-widest uppercase">{t.home.trustText}</p>
+          </div>
+          <TechMarquee />
         </div>
       </section>
       
