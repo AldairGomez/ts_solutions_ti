@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { LazyMotion, domAnimation, m, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import logo from '../assets/logo-icon.png';
 
@@ -62,7 +62,7 @@ export default function Header() {
             <div className="w-px h-4 bg-gray-300 dark:bg-gray-700"></div>
             
             <div className="flex items-center gap-4">
-              <button onClick={toggleLanguage} className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
+              <button type="button" onClick={toggleLanguage} className="text-sm font-medium hover:text-primary transition-colors flex items-center gap-1">
                 <span className={language === 'es' ? 'font-bold text-primary' : 'text-gray-500'}>ES</span>
                 <span className="text-gray-400">/</span>
                 <span className={language === 'en' ? 'font-bold text-primary' : 'text-gray-500 hover:text-gray-300'}>EN</span>
@@ -71,24 +71,27 @@ export default function Header() {
               <div className="w-px h-4 bg-gray-300 dark:bg-gray-700"></div>
               
               <button 
+                type="button"
                 onClick={toggleTheme} 
                 className="p-1.5 flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-slate-700 dark:text-slate-300 transition-colors"
                 aria-label="Toggle Theme"
                 title={isDarkMode ? "Cambiar a modo claro" : "Cambiar a modo oscuro"}
               >
                 <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.span
-                      key={isDarkMode ? 'dark' : 'light'}
-                      initial={{ y: -20, opacity: 0, rotate: -90 }}
-                      animate={{ y: 0, opacity: 1, rotate: 0 }}
-                      exit={{ y: 20, opacity: 0, rotate: 90 }}
-                      transition={{ duration: 0.3, ease: "anticipate" }}
-                      className="material-symbols-outlined text-[20px] absolute"
-                    >
-                      {isDarkMode ? 'light_mode' : 'dark_mode'}
-                    </motion.span>
-                  </AnimatePresence>
+                  <LazyMotion features={domAnimation}>
+                    <AnimatePresence mode="wait" initial={false}>
+                      <m.span
+                        key={isDarkMode ? 'dark' : 'light'}
+                        initial={{ y: -20, opacity: 0, rotate: -90 }}
+                        animate={{ y: 0, opacity: 1, rotate: 0 }}
+                        exit={{ y: 20, opacity: 0, rotate: 90 }}
+                        transition={{ duration: 0.3, ease: "anticipate" }}
+                        className="material-symbols-outlined text-[20px] absolute"
+                      >
+                        {isDarkMode ? 'light_mode' : 'dark_mode'}
+                      </m.span>
+                    </AnimatePresence>
+                  </LazyMotion>
                 </div>
               </button>
             </div>
@@ -98,32 +101,34 @@ export default function Header() {
           <div className="flex items-center gap-3 sm:gap-4 ml-auto lg:ml-0">
             {/* Mobile Lang & Theme Toggles (Visible only below lg) */}
             <div className="flex lg:hidden items-center gap-3 mr-1 sm:mr-2">
-              <button onClick={toggleLanguage} className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors">
+              <button type="button" onClick={toggleLanguage} className="text-sm font-bold text-slate-700 dark:text-slate-300 hover:text-primary transition-colors">
                 {language === 'es' ? 'EN' : 'ES'}
               </button>
               <div className="w-px h-4 bg-gray-300 dark:bg-gray-700"></div>
-              <button onClick={toggleTheme} className="flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-primary transition-colors">
+              <button type="button" onClick={toggleTheme} className="flex items-center justify-center text-slate-700 dark:text-slate-300 hover:text-primary transition-colors">
                 <div className="relative w-5 h-5 flex items-center justify-center overflow-hidden">
-                  <AnimatePresence mode="wait" initial={false}>
-                    <motion.span
-                      key={isDarkMode ? 'dark' : 'light'}
-                      initial={{ y: -20, opacity: 0, rotate: -90 }}
-                      animate={{ y: 0, opacity: 1, rotate: 0 }}
-                      exit={{ y: 20, opacity: 0, rotate: 90 }}
-                      transition={{ duration: 0.3, ease: "anticipate" }}
-                      className="material-symbols-outlined text-[20px] absolute"
-                    >
-                      {isDarkMode ? 'light_mode' : 'dark_mode'}
-                    </motion.span>
-                  </AnimatePresence>
+                  <LazyMotion features={domAnimation}>
+                    <AnimatePresence mode="wait" initial={false}>
+                      <m.span
+                        key={isDarkMode ? 'dark' : 'light'}
+                        initial={{ y: -20, opacity: 0, rotate: -90 }}
+                        animate={{ y: 0, opacity: 1, rotate: 0 }}
+                        exit={{ y: 20, opacity: 0, rotate: 90 }}
+                        transition={{ duration: 0.3, ease: "anticipate" }}
+                        className="material-symbols-outlined text-[20px] absolute"
+                      >
+                        {isDarkMode ? 'light_mode' : 'dark_mode'}
+                      </m.span>
+                    </AnimatePresence>
+                  </LazyMotion>
                 </div>
               </button>
             </div>
 
-            <button className="hidden sm:flex h-10 px-5 items-center justify-center rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all shadow-lg shadow-primary/20">
+            <button type="button" className="hidden sm:flex h-10 px-5 items-center justify-center rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all shadow-lg shadow-primary/20">
               {t.nav.quote}
             </button>
-            <button onClick={toggleMobileMenu} className="lg:hidden text-slate-900 dark:text-white p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
+            <button type="button" onClick={toggleMobileMenu} className="lg:hidden text-slate-900 dark:text-white p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <span className="material-symbols-outlined">{isMobileMenuOpen ? 'close' : 'menu'}</span>
             </button>
           </div>
@@ -136,7 +141,7 @@ export default function Header() {
             <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}/servicios`}>{t.nav.services}</Link>
             <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}/contacto`}>{t.nav.contact}</Link>
             
-            <button onClick={toggleMobileMenu} className="sm:hidden w-full mt-2 h-12 rounded-lg bg-primary hover:bg-primary/90 text-white text-base font-bold transition-all shadow-lg shadow-primary/20">
+            <button type="button" onClick={toggleMobileMenu} className="sm:hidden w-full mt-2 h-12 rounded-lg bg-primary hover:bg-primary/90 text-white text-base font-bold transition-all shadow-lg shadow-primary/20">
               {t.nav.quote}
             </button>
           </div>

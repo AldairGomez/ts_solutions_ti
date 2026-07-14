@@ -1,18 +1,19 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
+
+const pageVariants: any = {
+  initial: { opacity: 0, y: 15 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
+};
 
 export default function Services() {
   const { t, language } = useLanguage();
 
-  const pageVariants: any = {
-    initial: { opacity: 0, y: 15 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-    exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
-  };
-
   return (
-    <motion.main 
+    <LazyMotion features={domAnimation}>
+    <m.main 
       className="flex-1 flex flex-col items-center w-full"
       initial="initial"
       animate="animate"
@@ -23,7 +24,7 @@ export default function Services() {
         {/* Hero Section */}
         <div className="mb-12">
           <div className="flex flex-col gap-6 py-10 md:flex-row items-center">
-            <motion.div 
+            <m.div 
               className="w-full md:w-1/2"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -31,8 +32,8 @@ export default function Services() {
             >
               <div className="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-xl shadow-2xl shadow-primary/10" data-alt="Abstract 3D blue geometric shapes representing technology and data structure" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuD7xzFltBZ4R0aX-g3uYTufrad0y5vq7FNtY6arhdamVARc-7BVBAEzx_yZac51dHmyKl8NFw8bgQmZkj-dAp5grPLcr11htwPTkx1eLegOAQ-s6oQlH9W4J1WEGeMQ5Hx-dVGlhEAECihFNeKi8pl9MD2jWJSXR-FmB3yWRXChoRolizyy6G0Rl1xEj1Fox1gLOKnDtveEVisIZdGFd0IGIHiP_usOKQZpFaTLyMVl2LUsaLWTUJkttbbBeBmIIs-jqgJcCdsXcbhC")' }}>
               </div>
-            </motion.div>
-            <motion.div 
+            </m.div>
+            <m.div 
               className="flex flex-col gap-6 w-full md:w-1/2 md:pl-8"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -51,19 +52,19 @@ export default function Services() {
                   <span className="truncate">{t.services.heroBtn}</span>
                 </Link>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
 
         {/* Services Header */}
-        <motion.div 
+        <m.div 
           className="mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
         >
           <h2 className="text-slate-900 dark:text-white text-[28px] font-bold leading-tight tracking-[-0.015em] pb-3 border-l-4 border-primary pl-4">{t.services.header}</h2>
-        </motion.div>
+        </m.div>
 
         {/* Services Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
@@ -87,7 +88,7 @@ export default function Services() {
               img: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDkg7t2L9ly36EPwDrRFMs6ydo17eTrGaL0jvwxEJgWQJPtBSObX-KqpdLrRyCWgEqmAZlxmslTII68TDkb8TgGF_uxI-3FCpKb4LzIuF59QDPecfpB293cfI-QAW1O2AzmHlocn53L-d1pmv1nqRJoTwcC4NnrLKjcCcaPs6bFLGijajVovwG8bOFcMbt8zqMyPz9nws_ZcTVLO0gnEiT9KU3c2jkhov7BrkKxsdA3BUCGMYfJX2uUIhwgRG1VFxd7gd9RiRiB7Lg1'
             }
           ].map((srv, idx) => (
-            <motion.div 
+            <m.div 
               key={idx}
               className="flex flex-col rounded-xl bg-[#1b1f27] border border-[#282e39] overflow-hidden hover:-translate-y-1 hover:border-primary/50 transition-all duration-300 shadow-lg"
               initial={{ opacity: 0, y: 30 }}
@@ -105,18 +106,18 @@ export default function Services() {
                   <p className="text-[#9ca6ba] text-sm font-normal leading-relaxed">{srv.desc}</p>
                 </div>
                 <div className="mt-auto pt-4">
-                  <button className="flex items-center gap-2 text-primary text-sm font-bold group">
+                  <button type="button" className="flex items-center gap-2 text-primary text-sm font-bold group">
                     {t.services.learnMore}
                     <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                   </button>
                 </div>
               </div>
-            </motion.div>
+            </m.div>
           ))}
         </div>
 
         {/* Call to Action Strip */}
-        <motion.div 
+        <m.div 
           className="w-full rounded-2xl bg-gradient-to-r from-background-dark to-[#1b1f27] border border-[#282e39] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 mb-20 relative overflow-hidden"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -132,8 +133,9 @@ export default function Services() {
               <span className="truncate">{t.services.ctaBtn}</span>
             </Link>
           </div>
-        </motion.div>
+        </m.div>
       </div>
-    </motion.main>
+    </m.main>
+    </LazyMotion>
   );
 }

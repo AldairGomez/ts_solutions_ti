@@ -18,9 +18,10 @@ const technologies = [
   { name: 'Laravel', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg' }
 ];
 
+// Duplicamos el array para lograr el efecto infinito sin cortes
+const duplicatedTechs = [...technologies, ...technologies];
+
 export default function TechMarquee() {
-  // Duplicamos el array para lograr el efecto infinito sin cortes
-  const duplicatedTechs = [...technologies, ...technologies];
 
   return (
     <div className="w-full overflow-hidden py-8 relative">

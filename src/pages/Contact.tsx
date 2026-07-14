@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
+
+const pageVariants: any = {
+  initial: { opacity: 0, y: 15 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
+};
 
 export default function Contact() {
   const { t } = useLanguage();
@@ -12,14 +18,9 @@ export default function Contact() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const pageVariants: any = {
-    initial: { opacity: 0, y: 15 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-    exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
-  };
-
   return (
-    <motion.main 
+    <LazyMotion features={domAnimation}>
+    <m.main 
       className="flex-grow flex flex-col justify-center py-12 lg:py-20 px-6 lg:px-8"
       initial="initial"
       animate="animate"
@@ -62,7 +63,7 @@ export default function Contact() {
                   <p className="text-slate-600 dark:text-text-muted leading-relaxed">{t.contact.phoneDesc1}<br />{t.contact.phoneDesc2}</p>
                 </div>
               </a>
-              <div onClick={handleCopyEmail} className="relative flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors group cursor-pointer">
+              <div role="button" tabIndex={0} onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') handleCopyEmail(); }} onClick={handleCopyEmail} className="relative flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors group cursor-pointer">
                 {/* Tooltip */}
                 <div className="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
                   <div className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold py-1.5 px-3 rounded shadow-lg whitespace-nowrap">
@@ -139,6 +140,7 @@ export default function Contact() {
           </div>
         </div>
       </div>
-    </motion.main>
+    </m.main>
+    </LazyMotion>
   );
 }

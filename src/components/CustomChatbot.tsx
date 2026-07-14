@@ -31,16 +31,10 @@ export default function CustomChatbot() {
     }
   }, [isVoiceModeSession, isSpeaking, isListening, isLoading]);
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      scrollToBottom();
-    }
-  }, [messages, isOpen]);
 
   // Lógica de la viñeta emergente
   useEffect(() => {
@@ -70,6 +64,7 @@ export default function CustomChatbot() {
     setIsOpen(!isOpen);
     if (!isOpen) {
       setBubbleState('none');
+      setTimeout(() => scrollToBottom(), 50);
     } else {
       // If closing, stop speaking and exit voice mode
       if (window.speechSynthesis) {
@@ -93,6 +88,7 @@ export default function CustomChatbot() {
     
     // Add user message to UI
     setMessages((prev) => [...prev, { role: 'user', text: userMessage }]);
+    setTimeout(() => scrollToBottom(), 50);
     if (!forcedText) setInputValue('');
     setIsLoading(true);
 
@@ -122,6 +118,7 @@ export default function CustomChatbot() {
 
       // Agregamos la respuesta real del bot
       setMessages((prev) => [...prev, { role: 'bot', text: data.reply }]);
+      setTimeout(() => scrollToBottom(), 50);
 
       // Si venía de voz, el bot responde hablando
       if (fromVoice) {
@@ -135,6 +132,7 @@ export default function CustomChatbot() {
         { role: 'bot', text: `⚠️ Error de conexión: ${error.message}. Por favor revisa los Logs en Vercel o la consola de tu navegador.` },
         { role: 'bot', textKey: 'fallbackMessage' }
       ]);
+      setTimeout(() => scrollToBottom(), 50);
     } finally {
       setIsLoading(false);
     }
@@ -242,6 +240,15 @@ export default function CustomChatbot() {
     setIsListening(false);
   };
 
+  const handleMicClick = (e: any) => {
+    e.preventDefault();
+    if (isVoiceModeSession) {
+      exitVoiceMode(e);
+    } else {
+      startListening();
+    }
+  };
+
   // Helper para obtener el saludo basado en la hora actual y el idioma
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -273,6 +280,7 @@ export default function CustomChatbot() {
 
       {/* Botón flotante para abrir el chat */}
       <button
+        type="button"
         onClick={handleToggleChat}
         className={`fixed bottom-6 right-6 w-16 h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform z-50 ${isOpen ? 'scale-0 opacity-0 pointer-events-none' : 'scale-100 opacity-100'}`}
         aria-label={t.chatbot.openChatAria}
@@ -301,6 +309,7 @@ export default function CustomChatbot() {
             </div>
           </div>
           <button 
+            type="button"
             onClick={handleToggleChat}
             className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors"
           >
@@ -311,6 +320,9 @@ export default function CustomChatbot() {
         {/* OVERLAY DE VOZ MÓVIL (Visible en sm/celulares cuando hay sesión de voz activa) */}
         {isVoiceModeSession && (
           <div 
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => { if(e.key === 'Enter' || e.key === ' ') handleOverlayClick(); }}
             onClick={handleOverlayClick}
             className="sm:hidden absolute inset-0 top-[72px] bg-white/95 dark:bg-[#111318]/95 backdrop-blur-md z-30 flex flex-col items-center justify-center cursor-pointer rounded-b-2xl"
           >
@@ -330,6 +342,7 @@ export default function CustomChatbot() {
             </p>
             
             <button 
+              type="button"
               onClick={exitVoiceMode}
               className="w-14 h-14 bg-red-500 text-white rounded-full flex items-center justify-center hover:bg-red-600 transition-colors shadow-lg z-40"
             >
@@ -367,7 +380,7 @@ export default function CustomChatbot() {
                           </svg>
                           WhatsApp
                         </a>
-                        <button onClick={handleCopyEmail} className="inline-flex items-center justify-center gap-2 bg-[#1b61f2] text-white px-4 py-2 rounded-lg hover:bg-[#1448b8] transition-colors font-bold self-start shadow-sm">
+                        <button type="button" onClick={handleCopyEmail} className="inline-flex items-center justify-center gap-2 bg-[#1b61f2] text-white px-4 py-2 rounded-lg hover:bg-[#1448b8] transition-colors font-bold self-start shadow-sm">
                           <span className="material-symbols-outlined text-lg">{copiedEmail ? 'check' : 'mail'}</span>
                           {copiedEmail ? t.chatbot.emailCopied : 'tssolutionsti@gmail.com'}
                         </button>
@@ -407,13 +420,7 @@ export default function CustomChatbot() {
             />
             <button 
               type="button"
-              onClick={(e) => {
-                if (isVoiceModeSession) {
-                  exitVoiceMode(e);
-                } else {
-                  startListening();
-                }
-              }}
+              onClick={handleMicClick}
               disabled={!isVoiceModeSession && isLoading}
               className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${
                 isVoiceModeSession 

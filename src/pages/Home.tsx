@@ -1,40 +1,41 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { LazyMotion, domAnimation, m } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 import TechMarquee from '../components/TechMarquee';
+
+// Variantes para la transición de página
+const pageVariants: any = {
+  initial: { opacity: 0, y: 15 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
+  exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
+};
+
+// Variantes para el efecto cascada (stagger) del Hero
+const heroContainerVariants: any = {
+  initial: { opacity: 0 },
+  animate: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 }
+  }
+};
+
+const heroItemVariants: any = {
+  initial: { opacity: 0, y: 30 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
+};
 
 export default function Home() {
   const { t, language } = useLanguage();
 
-  // Variantes para la transición de página
-  const pageVariants: any = {
-    initial: { opacity: 0, y: 15 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.4, ease: "easeOut" } },
-    exit: { opacity: 0, y: -15, transition: { duration: 0.3, ease: "easeIn" } }
-  };
-
-  // Variantes para el efecto cascada (stagger) del Hero
-  const heroContainerVariants: any = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { staggerChildren: 0.2 }
-    }
-  };
-
-  const heroItemVariants: any = {
-    initial: { opacity: 0, y: 30 },
-    animate: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
-
   return (
-    <motion.main 
-      className="flex-grow"
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      variants={pageVariants}
-    >
+    <LazyMotion features={domAnimation}>
+      <m.main 
+        className="flex-grow"
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={pageVariants}
+      >
       {/* Hero Section */}
       <section className="relative px-4 md:px-10 lg:px-40 py-12 md:py-20 lg:py-28 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] -z-10 translate-x-1/3 -translate-y-1/4"></div>
@@ -42,41 +43,41 @@ export default function Home() {
         <div className="max-w-[1440px] mx-auto">
           <div className="flex flex-col lg:flex-row gap-12 items-center">
             {/* Text Content */}
-            <motion.div 
+            <m.div 
               className="flex-1 flex flex-col gap-6 lg:gap-8 max-w-2xl"
               variants={heroContainerVariants}
               initial="initial"
               animate="animate"
             >
-              <motion.div variants={heroItemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
+              <m.div variants={heroItemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
                 <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
                 <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t.home.heroTag}</span>
-              </motion.div>
+              </m.div>
               
-              <motion.h1 variants={heroItemVariants} className="text-4xl md:text-5xl lg:text-6xl font-black font-display leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+              <m.h1 variants={heroItemVariants} className="text-4xl md:text-5xl lg:text-6xl font-black font-display leading-[1.1] tracking-tight text-slate-900 dark:text-white">
                 {t.home.heroTitle} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">{t.home.heroTitleHighlight}</span>
-              </motion.h1>
+              </m.h1>
               
-              <motion.p variants={heroItemVariants} className="text-lg text-slate-600 dark:text-slate-400 font-normal leading-relaxed max-w-lg">
+              <m.p variants={heroItemVariants} className="text-lg text-slate-600 dark:text-slate-400 font-normal leading-relaxed max-w-lg">
                 {t.home.heroSubtitle}
-              </motion.p>
+              </m.p>
               
-              <motion.div variants={heroItemVariants} className="flex flex-col sm:flex-row gap-4 mt-2">
-                <button className="h-12 px-8 rounded-lg bg-primary hover:bg-blue-600 text-white text-base font-bold transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+              <m.div variants={heroItemVariants} className="flex flex-col sm:flex-row gap-4 mt-2">
+                <button type="button" className="h-12 px-8 rounded-lg bg-primary hover:bg-blue-600 text-white text-base font-bold transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
                   <span>{t.home.heroBtnStart}</span>
                   <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
                 </button>
-                <button className="h-12 px-8 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-base font-bold transition-all flex items-center justify-center">
+                <button type="button" className="h-12 px-8 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-base font-bold transition-all flex items-center justify-center">
                   {t.home.heroBtnPortfolio}
                 </button>
-              </motion.div>
+              </m.div>
               
               {/* Tech Stack Marquee (Now rendered below the hero block) */}
-            </motion.div>
+            </m.div>
             
             {/* Image Content */}
-            <motion.div 
+            <m.div 
               className="flex-1 w-full lg:w-auto relative group"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -86,7 +87,7 @@ export default function Home() {
               <div className="relative w-full aspect-[4/3] rounded-2xl bg-center bg-cover bg-no-repeat shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-700" data-alt="Modern server room with blue neon lights and technology equipment" style={{ backgroundImage: 'url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIFKzLqZUS6jXA8_NhA8rZmfX1E5KfUvY2d_mguB2Z2fRYQa7uQlsnCVrivgl7VU7oCtmRcJaxStXSpx3_juj-8RH_tuY-MgAxZ9g-XIfyItiR40osRA93yUWGiQwXIw8MUy3Xelhz_WCrLBnWAYzERVS87l-FakIU7n-Q26W7FMgItzV89SPgPc-TSUwtORRhReKo2uy4ILcaxhOjeAOxtt3udREO_QxDim6SPr9r_sVfwQHIUC0RKol80w_NNn75CqDo58nRIaU3")' }}>
                 <div className="absolute inset-0 bg-gradient-to-t from-background-dark/80 via-transparent to-transparent"></div>
                 {/* Floating Card 1 */}
-                <motion.div 
+                <m.div 
                   className="absolute bottom-6 left-6 right-6 sm:right-auto bg-white/10 backdrop-blur-md border border-white/10 p-4 rounded-xl shadow-lg flex items-center gap-4"
                   initial={{ y: 20, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -99,9 +100,9 @@ export default function Home() {
                     <p className="text-white font-bold text-sm">{t.home.card1Title}</p>
                     <p className="text-slate-300 text-xs">{t.home.card1Sub}</p>
                   </div>
-                </motion.div>
+                </m.div>
               </div>
-            </motion.div>
+            </m.div>
           </div>
         </div>
       </section>
@@ -119,7 +120,7 @@ export default function Home() {
       {/* Features Section */}
       <section className="px-4 md:px-10 lg:px-40 py-20 bg-white dark:bg-[#161b24] border-y border-slate-200 dark:border-[#282e39]" id="servicios">
         <div className="max-w-[1440px] mx-auto">
-          <motion.div 
+          <m.div 
             className="text-center max-w-3xl mx-auto mb-16"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -128,14 +129,14 @@ export default function Home() {
           >
             <h2 className="text-3xl md:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">{t.home.servicesHeader}</h2>
             <p className="text-slate-600 dark:text-slate-400 text-lg">{t.home.servicesSub}</p>
-          </motion.div>
+          </m.div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
               { icon: 'code', title: t.home.srvWeb, desc: t.home.srvWebDesc },
               { icon: 'build', title: t.home.srvPc, desc: t.home.srvPcDesc },
               { icon: 'videocam', title: t.home.srvCctv, desc: t.home.srvCctvDesc }
             ].map((service, idx) => (
-              <motion.div 
+              <m.div 
                 key={idx}
                 className="group relative p-8 rounded-2xl bg-slate-50 dark:bg-card-dark border border-slate-200 dark:border-[#282e39] hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1"
                 initial={{ opacity: 0, y: 40 }}
@@ -155,7 +156,7 @@ export default function Home() {
                   {t.home.learnMore} <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </Link>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
         </div>
@@ -164,7 +165,7 @@ export default function Home() {
       {/* Projects/Portfolio Teaser */}
       <section className="px-4 md:px-10 lg:px-40 py-20 relative overflow-hidden" id="portafolio">
         <div className="max-w-[1440px] mx-auto">
-          <motion.div 
+          <m.div 
             className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -178,7 +179,7 @@ export default function Home() {
             <a className="hidden md:flex items-center justify-center px-6 h-10 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-white font-bold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
               {t.home.portfolioBtnAll}
             </a>
-          </motion.div>
+          </m.div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[
               {
@@ -192,7 +193,7 @@ export default function Home() {
                 title: t.home.port2Title
               }
             ].map((port, idx) => (
-              <motion.div 
+              <m.div 
                 key={idx}
                 className="group relative overflow-hidden rounded-xl aspect-video cursor-pointer"
                 initial={{ opacity: 0, scale: 0.95, y: 30 }}
@@ -206,7 +207,7 @@ export default function Home() {
                   <p className="text-primary font-bold text-sm mb-1">{port.cat}</p>
                   <h3 className="text-white text-xl font-bold font-display">{port.title}</h3>
                 </div>
-              </motion.div>
+              </m.div>
             ))}
           </div>
           <div className="mt-8 flex justify-center md:hidden">
@@ -219,7 +220,7 @@ export default function Home() {
       
       {/* CTA Banner */}
       <section className="px-4 md:px-10 lg:px-40 py-16">
-        <motion.div 
+        <m.div 
           className="max-w-[1440px] mx-auto rounded-3xl bg-primary relative overflow-hidden px-8 py-16 md:px-16 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-10"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -236,8 +237,9 @@ export default function Home() {
               {t.home.ctaBtn}
             </Link>
           </div>
-        </motion.div>
+        </m.div>
       </section>
-    </motion.main>
+    </m.main>
+    </LazyMotion>
   );
 }

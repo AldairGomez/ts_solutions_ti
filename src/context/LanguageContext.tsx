@@ -1,4 +1,4 @@
-import { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode, useMemo, useCallback } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { translations, TranslationDict } from '../locales/translations';
 
@@ -18,7 +18,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   // Si lang no es válido, por defecto 'es'
   const language = lang === 'en' ? 'en' : 'es';
 
-  const toggleLanguage = () => {
+  const toggleLanguage = useCallback(() => {
     const newLang = language === 'es' ? 'en' : 'es';
     // Reemplaza el idioma en la ruta actual
     const pathParts = location.pathname.split('/');
@@ -26,12 +26,14 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       pathParts[1] = newLang; // el índice 1 es el idioma porque la URL empieza con /
     }
     navigate(pathParts.join('/') + location.search + location.hash);
-  };
+  }, [language, location.pathname, location.search, location.hash, navigate]);
 
   const t = translations[language as keyof typeof translations];
 
+  const contextValue = React.useMemo(() => ({ language, toggleLanguage, t }), [language, navigate, location.pathname, location.search, location.hash, t]);
+
   return (
-    <LanguageContext.Provider value={{ language, toggleLanguage, t }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );

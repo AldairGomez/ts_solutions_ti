@@ -5,18 +5,17 @@ export default function FloatingSocials() {
   const clickTimeoutRef = useRef<number | null>(null);
 
   const handleClick = () => {
-    setIsClicked((prev) => {
-      const nextState = !prev;
-      if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
-      
-      // Auto-cierre después de 4 segundos si se acaba de abrir
-      if (nextState) {
-        clickTimeoutRef.current = setTimeout(() => {
-          setIsClicked(false);
-        }, 4000);
-      }
-      return nextState;
-    });
+    const nextState = !isClicked;
+    setIsClicked(nextState);
+    
+    if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
+    
+    // Auto-cierre después de 4 segundos si se acaba de abrir
+    if (nextState) {
+      clickTimeoutRef.current = window.setTimeout(() => {
+        setIsClicked(false);
+      }, 4000);
+    }
   };
 
   return (
@@ -53,6 +52,7 @@ export default function FloatingSocials() {
 
       {/* Botón Principal Flotante */}
       <button 
+        type="button"
         onClick={handleClick}
         className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg hover:scale-110 transition-transform"
         aria-label="Redes Sociales"
