@@ -6,4 +6,16 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   base: '/',
+  ssgOptions: {
+    includedRoutes(paths, routes) {
+      const langs = ['es', 'en'];
+      const pages = ['/', '/servicios', '/contacto'];
+      // Generar todas las combinaciones, ej: /es, /es/servicios
+      const dynamicRoutes = langs.flatMap(lang => 
+        pages.map(page => page === '/' ? `/${lang}` : `/${lang}${page}`)
+      );
+      // Incluir también la raíz '/'
+      return ['/', ...dynamicRoutes];
+    }
+  }
 })

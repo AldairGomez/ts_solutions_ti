@@ -5,7 +5,12 @@ import { useLanguage } from '../context/LanguageContext';
 import logo from '../assets/logo-icon.png';
 
 export default function Header() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
+  });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { language, toggleLanguage, t } = useLanguage();
@@ -19,10 +24,14 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    if (isDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    if (typeof window !== 'undefined') {
+      if (isDarkMode) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
     }
   }, [isDarkMode]);
 
@@ -37,7 +46,7 @@ export default function Header() {
     }`}>
       <div className="px-4 md:px-10 lg:px-40 py-3 mx-auto max-w-[1440px] relative">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
+          <Link to={`/${language}`} className="flex items-center gap-2 sm:gap-3 group">
             <img src={logo} alt="TS Logo" className="h-8 sm:h-10 md:h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
             <span className="text-base sm:text-xl md:text-2xl font-black font-display tracking-widest uppercase bg-gradient-to-r from-[#44449b] via-[#3381e9] to-[#44449b] bg-clip-text text-transparent drop-shadow-sm">
               Solutions TI
@@ -46,9 +55,9 @@ export default function Header() {
           
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-8">
-            <Link className="text-sm font-medium hover:text-primary transition-colors" to="/">{t.nav.home}</Link>
-            <Link className="text-sm font-medium hover:text-primary transition-colors" to="/servicios">{t.nav.services}</Link>
-            <Link className="text-sm font-medium hover:text-primary transition-colors" to="/contacto">{t.nav.contact}</Link>
+            <Link className="text-sm font-medium hover:text-primary transition-colors" to={`/${language}`}>{t.nav.home}</Link>
+            <Link className="text-sm font-medium hover:text-primary transition-colors" to={`/${language}/servicios`}>{t.nav.services}</Link>
+            <Link className="text-sm font-medium hover:text-primary transition-colors" to={`/${language}/contacto`}>{t.nav.contact}</Link>
             
             <div className="w-px h-4 bg-gray-300 dark:bg-gray-700"></div>
             
@@ -123,9 +132,9 @@ export default function Header() {
         {/* Mobile Menu Dropdown */}
         {isMobileMenuOpen && (
           <div className="lg:hidden absolute top-[100%] left-0 w-full bg-white dark:bg-[#111318] border-b border-gray-200 dark:border-[#282e39] py-4 px-4 flex flex-col gap-4 shadow-xl animate-in slide-in-from-top-2 duration-200">
-            <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to="/">{t.nav.home}</Link>
-            <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to="/servicios">{t.nav.services}</Link>
-            <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to="/contacto">{t.nav.contact}</Link>
+            <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}`}>{t.nav.home}</Link>
+            <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}/servicios`}>{t.nav.services}</Link>
+            <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}/contacto`}>{t.nav.contact}</Link>
             
             <button onClick={toggleMobileMenu} className="sm:hidden w-full mt-2 h-12 rounded-lg bg-primary hover:bg-primary/90 text-white text-base font-bold transition-all shadow-lg shadow-primary/20">
               {t.nav.quote}

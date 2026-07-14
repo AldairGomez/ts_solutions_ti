@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../context/LanguageContext';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Variantes para la transición de página
   const pageVariants: any = {
@@ -148,9 +148,11 @@ export default function Home() {
                 <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed">
                   {service.desc}
                 </p>
-                <Link className="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-3 transition-all" to="/servicios">
+                <div className="mt-auto">
+                <Link className="inline-flex items-center gap-2 text-primary font-bold text-sm hover:gap-3 transition-all" to={`/${language}/servicios`}>
                   {t.home.learnMore} <span className="material-symbols-outlined text-sm">arrow_forward</span>
                 </Link>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -227,9 +229,9 @@ export default function Home() {
             <h2 className="text-white text-3xl md:text-4xl font-bold font-display mb-4">{t.home.ctaHeader}</h2>
             <p className="text-blue-100 text-lg">{t.home.ctaSub}</p>
           </div>
-          <div className="relative z-10 flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <Link to="/contacto" className="h-12 px-8 rounded-lg bg-white flex items-center text-primary text-base font-bold hover:bg-blue-50 transition-colors shadow-lg">
-              {t.home.ctaBtn}
+          <div className="mt-12">
+            <Link to={`/${language}/contacto`} className="h-12 px-8 rounded-lg bg-white flex items-center text-primary text-base font-bold hover:bg-blue-50 transition-colors shadow-lg">
+              {t.home.ctaButton}
             </Link>
           </div>
         </motion.div>

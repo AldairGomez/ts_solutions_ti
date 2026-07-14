@@ -1,4 +1,5 @@
-import { createContext, useState, useContext, useEffect, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { translations, TranslationDict } from '../locales/translations';
 
 interface LanguageContextType {
@@ -10,27 +11,23 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Check localStorage for saved language or default to 'es'
-  const [language, setLanguage] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      const savedLanguage = localStorage.getItem('language');
-      return savedLanguage ? savedLanguage : 'es';
-    }
-    return 'es';
-  });
+  const { lang } = useParams<{ lang: string }>();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  // Save to localStorage whenever it changes
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('language', language);
-    }
-  }, [language]);
+  // Si lang no es válido, por defecto 'es'
+  const language = lang === 'en' ? 'en' : 'es';
 
   const toggleLanguage = () => {
-    setLanguage(prev => (prev === 'es' ? 'en' : 'es'));
+    const newLang = language === 'es' ? 'en' : 'es';
+    // Reemplaza el idioma en la ruta actual
+    const pathParts = location.pathname.split('/');
+    if (pathParts.length > 1) {
+      pathParts[1] = newLang; // el índice 1 es el idioma porque la URL empieza con /
+    }
+    navigate(pathParts.join('/') + location.search + location.hash);
   };
 
-  // Helper to easily get the translation text
   const t = translations[language as keyof typeof translations];
 
   return (
