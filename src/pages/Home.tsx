@@ -231,7 +231,7 @@ export default function Home() {
           </div>
           <div className="mt-12">
             <Link to={`/${language}/contacto`} className="h-12 px-8 rounded-lg bg-white flex items-center text-primary text-base font-bold hover:bg-blue-50 transition-colors shadow-lg">
-              {t.home.ctaButton}
+              {t.home.ctaBtn}
             </Link>
           </div>
         </motion.div>

@@ -48,7 +48,7 @@ export default function Services() {
               </div>
               <div className="flex gap-4">
                 <Link to={`/${language}/contacto`} className="flex w-fit cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary hover:bg-primary/90 transition-colors text-white text-base font-bold leading-normal tracking-[0.015em] shadow-[0_0_20px_rgba(13,89,242,0.3)]">
-                  <span className="truncate">{t.services.ctaButton}</span>
+                  <span className="truncate">{t.services.heroBtn}</span>
                 </Link>
               </div>
             </motion.div>
@@ -129,7 +129,7 @@ export default function Services() {
           </div>
           <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
             <Link to={`/${language}/contacto`} className="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-white text-background-dark hover:bg-gray-100 transition-colors text-sm font-bold leading-normal">
-              <span className="truncate">{t.services.ctaButton}</span>
+              <span className="truncate">{t.services.ctaBtn}</span>
             </Link>
           </div>
         </motion.div>
