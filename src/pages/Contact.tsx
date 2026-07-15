@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
 import PhoneInput from 'react-phone-number-input';
@@ -14,6 +14,8 @@ const pageVariants: any = {
 export default function Contact() {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   // Form State
@@ -34,6 +36,10 @@ export default function Contact() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -241,11 +247,13 @@ export default function Contact() {
 
               <div className="flex flex-col gap-2 items-start mt-2">
                 <div className="rounded-lg overflow-hidden border border-slate-300 dark:border-border-dark bg-white">
-                  <ReCAPTCHA
-                    ref={recaptchaRef}
-                    sitekey="6Ld8MVQtAAAAACoEAVtlt5fB5x77a6goNnfZkimL"
-                    onChange={onCaptchaChange}
-                  />
+                  {isClient && (
+                    <ReCAPTCHA
+                      ref={recaptchaRef}
+                      sitekey="6Ld8MVQtAAAAACoEAVtlt5fB5x77a6goNnfZkimL"
+                      onChange={onCaptchaChange}
+                    />
+                  )}
                 </div>
                 {errors.captcha && <span className="text-red-500 text-xs font-bold">{errors.captcha}</span>}
               </div>
