@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { LazyMotion, domAnimation, m } from 'framer-motion';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 const pageVariants: any = {
   initial: { opacity: 0, y: 15 },
@@ -11,11 +14,99 @@ const pageVariants: any = {
 export default function Contact() {
   const { t } = useLanguage();
   const [copied, setCopied] = useState(false);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText('tssolutionsti@gmail.com');
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
+  };
+
+  const handlePhoneChange = (value: string | undefined) => {
+    setFormData({ ...formData, phone: value || '' });
+    if (errors.phone) setErrors({ ...errors, phone: '' });
+  };
+
+  const onCaptchaChange = (token: string | null) => {
+    setCaptchaToken(token);
+    if (errors.captcha) setErrors({ ...errors, captcha: '' });
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+    if (!formData.name.trim()) newErrors.name = t.contact.formErrorRequired;
+    
+    if (!formData.email.trim()) {
+      newErrors.email = t.contact.formErrorRequired;
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = t.contact.formErrorEmail;
+    }
+    
+    if (!formData.phone) newErrors.phone = t.contact.formErrorRequired;
+    if (!formData.subject) newErrors.subject = t.contact.formErrorRequired;
+    if (!formData.message.trim()) newErrors.message = t.contact.formErrorRequired;
+    if (!captchaToken) newErrors.captcha = t.contact.formErrorCaptcha;
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/tssolutionsti@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          Nombre: formData.name,
+          Email: formData.email,
+          Teléfono: formData.phone,
+          Asunto: formData.subject,
+          Mensaje: formData.message,
+          _captcha: "false" // We disable formsubmit captcha because we use our own ReCAPTCHA
+        })
+      });
+      if (response.ok) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setCaptchaToken(null);
+        recaptchaRef.current?.reset();
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,7 +132,6 @@ export default function Contact() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start">
           {/* Left Column: Contact Details & Map */}
           <div className="flex flex-col gap-8 order-2 lg:order-1">
-            {/* Contact Info Cards */}
             <div className="grid gap-6">
               <div className="flex items-start gap-5 p-4 rounded-xl border border-transparent hover:border-slate-300 dark:hover:border-border-dark transition-colors group">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#8B5CF6]/10 text-[#8B5CF6] border border-[#8B5CF6]/20 group-hover:bg-[#8B5CF6] group-hover:text-white transition-colors">
@@ -81,21 +171,21 @@ export default function Contact() {
                 </div>
               </div>
             </div>
-
-
           </div>
 
           {/* Right Column: Form */}
           <div className="order-1 lg:order-2 bg-slate-50/50 dark:bg-surface-dark/50 p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-border-dark backdrop-blur-sm">
-            <form action="#" className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              
               <label className="flex flex-col gap-2">
                 <span className="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider">{t.contact.formName}</span>
                 <div className="relative group">
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <span className="material-symbols-outlined text-slate-400 dark:text-text-muted group-focus-within:text-primary transition-colors">person</span>
                   </div>
-                  <input className="w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-text-muted/50 border border-slate-300 dark:border-border-dark rounded-lg pl-12 pr-4 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body" placeholder={t.contact.formNamePlaceholder} type="text" />
+                  <input name="name" value={formData.name} onChange={handleChange} className={`w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-text-muted/50 border ${errors.name ? 'border-red-500' : 'border-slate-300 dark:border-border-dark'} rounded-lg pl-12 pr-4 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body`} placeholder={t.contact.formNamePlaceholder} type="text" />
                 </div>
+                {errors.name && <span className="text-red-500 text-xs font-bold">{errors.name}</span>}
               </label>
 
               <label className="flex flex-col gap-2">
@@ -104,8 +194,23 @@ export default function Contact() {
                   <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                     <span className="material-symbols-outlined text-slate-400 dark:text-text-muted group-focus-within:text-primary transition-colors">alternate_email</span>
                   </div>
-                  <input className="w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-text-muted/50 border border-slate-300 dark:border-border-dark rounded-lg pl-12 pr-4 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body" placeholder={t.contact.formEmailPlaceholder} type="email" />
+                  <input name="email" value={formData.email} onChange={handleChange} className={`w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-text-muted/50 border ${errors.email ? 'border-red-500' : 'border-slate-300 dark:border-border-dark'} rounded-lg pl-12 pr-4 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body`} placeholder={t.contact.formEmailPlaceholder} type="email" />
                 </div>
+                {errors.email && <span className="text-red-500 text-xs font-bold">{errors.email}</span>}
+              </label>
+
+              <label className="flex flex-col gap-2">
+                <span className="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider">{t.contact.formPhone}</span>
+                <div className={`phone-input-container w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white border ${errors.phone ? 'border-red-500' : 'border-slate-300 dark:border-border-dark'} rounded-lg px-4 py-3.5 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all font-body`}>
+                  <PhoneInput
+                    international
+                    defaultCountry="PE"
+                    value={formData.phone}
+                    onChange={handlePhoneChange}
+                    placeholder={t.contact.formPhonePlaceholder}
+                  />
+                </div>
+                {errors.phone && <span className="text-red-500 text-xs font-bold">{errors.phone}</span>}
               </label>
 
               <label className="flex flex-col gap-2">
@@ -117,7 +222,7 @@ export default function Contact() {
                   <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
                     <span className="material-symbols-outlined text-slate-400 dark:text-text-muted">expand_more</span>
                   </div>
-                  <select className="w-full appearance-none bg-white dark:bg-surface-dark text-slate-900 dark:text-white border border-slate-300 dark:border-border-dark rounded-lg pl-12 pr-10 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body" defaultValue="">
+                  <select name="subject" value={formData.subject} onChange={handleChange} className={`w-full appearance-none bg-white dark:bg-surface-dark text-slate-900 dark:text-white border ${errors.subject ? 'border-red-500' : 'border-slate-300 dark:border-border-dark'} rounded-lg pl-12 pr-10 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all font-body`}>
                     <option disabled value="">{t.contact.formSubjectOption0}</option>
                     <option value="consulting">{t.contact.formSubjectOption1}</option>
                     <option value="infrastructure">{t.contact.formSubjectOption2}</option>
@@ -125,16 +230,47 @@ export default function Contact() {
                     <option value="other">{t.contact.formSubjectOption4}</option>
                   </select>
                 </div>
+                {errors.subject && <span className="text-red-500 text-xs font-bold">{errors.subject}</span>}
               </label>
 
               <label className="flex flex-col gap-2">
                 <span className="text-slate-900 dark:text-white text-sm font-bold uppercase tracking-wider">{t.contact.formMessage}</span>
-                <textarea className="w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-text-muted/50 border border-slate-300 dark:border-border-dark rounded-lg px-4 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none font-body" placeholder={t.contact.formMessagePlaceholder} rows="4"></textarea>
+                <textarea name="message" value={formData.message} onChange={handleChange} className={`w-full bg-white dark:bg-surface-dark text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-text-muted/50 border ${errors.message ? 'border-red-500' : 'border-slate-300 dark:border-border-dark'} rounded-lg px-4 py-3.5 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all resize-none font-body`} placeholder={t.contact.formMessagePlaceholder} rows={4}></textarea>
+                {errors.message && <span className="text-red-500 text-xs font-bold">{errors.message}</span>}
               </label>
 
-              <button className="mt-2 w-full bg-primary hover:bg-primary/90 text-white dark:text-background-dark font-bold text-base py-4 rounded-lg shadow-[0_0_20px_rgba(19,236,236,0.3)] hover:shadow-[0_0_30px_rgba(19,236,236,0.5)] transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 group" type="button">
-                <span>{t.contact.formBtn}</span>
-                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+              <div className="flex flex-col gap-2 items-start mt-2">
+                <div className="rounded-lg overflow-hidden border border-slate-300 dark:border-border-dark bg-white">
+                  <ReCAPTCHA
+                    ref={recaptchaRef}
+                    sitekey="6Ld8MVQtAAAAACoEAVtlt5fB5x77a6goNnfZkimL"
+                    onChange={onCaptchaChange}
+                  />
+                </div>
+                {errors.captcha && <span className="text-red-500 text-xs font-bold">{errors.captcha}</span>}
+              </div>
+
+              {submitStatus === 'success' && (
+                <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+                  <span className="block sm:inline">{t.contact.formSuccess}</span>
+                </div>
+              )}
+              
+              {submitStatus === 'error' && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                  <span className="block sm:inline">{t.contact.formErrorSubmit}</span>
+                </div>
+              )}
+
+              <button disabled={isSubmitting} className="mt-2 w-full bg-primary hover:bg-primary/90 disabled:bg-primary/50 text-white dark:text-background-dark font-bold text-base py-4 rounded-lg shadow-[0_0_20px_rgba(19,236,236,0.3)] hover:shadow-[0_0_30px_rgba(19,236,236,0.5)] transition-all transform active:scale-[0.99] flex items-center justify-center gap-2 group" type="submit">
+                {isSubmitting ? (
+                  <span>{t.contact.formBtnSending}</span>
+                ) : (
+                  <>
+                    <span>{t.contact.formBtn}</span>
+                    <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </>
+                )}
               </button>
             </form>
           </div>

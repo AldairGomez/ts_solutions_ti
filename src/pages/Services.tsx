@@ -116,24 +116,7 @@ export default function Services() {
           ))}
         </div>
 
-        {/* Call to Action Strip */}
-        <m.div 
-          className="w-full rounded-2xl bg-gradient-to-r from-background-dark to-[#1b1f27] border border-[#282e39] p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-8 mb-20 relative overflow-hidden"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-50px" }}
-        >
-          <div className="absolute inset-0 bg-primary/5"></div>
-          <div className="relative z-10 flex flex-col gap-2 text-center md:text-left">
-            <h3 className="text-2xl font-bold text-white">{t.services.ctaHeader}</h3>
-            <p className="text-[#9ca6ba]">{t.services.ctaSub}</p>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-4 justify-center md:justify-start">
-            <Link to={`/${language}/contacto`} className="flex min-w-[140px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-6 bg-white text-background-dark hover:bg-gray-100 transition-colors text-sm font-bold leading-normal">
-              <span className="truncate">{t.services.ctaBtn}</span>
-            </Link>
-          </div>
-        </m.div>
+
       </div>
     </m.main>
     </LazyMotion>

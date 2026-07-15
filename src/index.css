@@ -96,3 +96,32 @@ h1, h2, h3, h4, h5, h6, .font-display {
     scroll-behavior: auto !important;
   }
 }
+
+/* react-phone-number-input overrides */
+.phone-input-container .PhoneInputInput {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  color: inherit !important;
+  font-family: inherit !important;
+  font-size: 1rem;
+}
+.phone-input-container .PhoneInputCountry {
+  margin-right: 12px;
+}
+.phone-input-container .PhoneInputCountryIcon {
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.dark .phone-input-container .PhoneInputCountryIcon {
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+/* Native select element inside PhoneInput */
+.phone-input-container .PhoneInputCountrySelect {
+  cursor: pointer;
+}
+.dark .phone-input-container .PhoneInputCountrySelect,
+.dark .phone-input-container .PhoneInputCountrySelect option {
+  background-color: #1e293b !important; /* slate-800 */
+  color: #f8fafc !important; /* slate-50 */
+}

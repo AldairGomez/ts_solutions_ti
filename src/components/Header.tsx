@@ -125,9 +125,7 @@ export default function Header() {
               </button>
             </div>
 
-            <button type="button" className="hidden sm:flex h-10 px-5 items-center justify-center rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-bold transition-all shadow-lg shadow-primary/20">
-              {t.nav.quote}
-            </button>
+
             <button type="button" onClick={toggleMobileMenu} className="lg:hidden text-slate-900 dark:text-white p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors">
               <span className="material-symbols-outlined">{isMobileMenuOpen ? 'close' : 'menu'}</span>
             </button>
@@ -141,9 +139,7 @@ export default function Header() {
             <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}/servicios`}>{t.nav.services}</Link>
             <Link onClick={toggleMobileMenu} className="text-base font-bold text-slate-900 dark:text-white hover:text-primary transition-colors py-2" to={`/${language}/contacto`}>{t.nav.contact}</Link>
             
-            <button type="button" onClick={toggleMobileMenu} className="sm:hidden w-full mt-2 h-12 rounded-lg bg-primary hover:bg-primary/90 text-white text-base font-bold transition-all shadow-lg shadow-primary/20">
-              {t.nav.quote}
-            </button>
+
           </div>
         )}
       </div>

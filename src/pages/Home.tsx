@@ -49,11 +49,6 @@ export default function Home() {
               initial="initial"
               animate="animate"
             >
-              <m.div variants={heroItemVariants} className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 w-fit">
-                <span className="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-                <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t.home.heroTag}</span>
-              </m.div>
-              
               <m.h1 variants={heroItemVariants} className="text-4xl md:text-5xl lg:text-6xl font-black font-display leading-[1.1] tracking-tight text-slate-900 dark:text-white">
                 {t.home.heroTitle} <br />
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-blue-400">{t.home.heroTitleHighlight}</span>
@@ -64,13 +59,10 @@ export default function Home() {
               </m.p>
               
               <m.div variants={heroItemVariants} className="flex flex-col sm:flex-row gap-4 mt-2">
-                <button type="button" className="h-12 px-8 rounded-lg bg-primary hover:bg-blue-600 text-white text-base font-bold transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
+                <Link to={`/${language}/contacto`} className="h-12 px-8 rounded-lg bg-primary hover:bg-blue-600 text-white text-base font-bold transition-all shadow-lg shadow-primary/25 flex items-center justify-center gap-2">
                   <span>{t.home.heroBtnStart}</span>
                   <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
-                </button>
-                <button type="button" className="h-12 px-8 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-900 dark:text-white text-base font-bold transition-all flex items-center justify-center">
-                  {t.home.heroBtnPortfolio}
-                </button>
+                </Link>
               </m.div>
               
               {/* Tech Stack Marquee (Now rendered below the hero block) */}
@@ -218,27 +210,7 @@ export default function Home() {
         </div>
       </section>
       
-      {/* CTA Banner */}
-      <section className="px-4 md:px-10 lg:px-40 py-16">
-        <m.div 
-          className="max-w-[1440px] mx-auto rounded-3xl bg-primary relative overflow-hidden px-8 py-16 md:px-16 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-10"
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.7 }}
-        >
-          <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
-          <div className="relative z-10 max-w-2xl">
-            <h2 className="text-white text-3xl md:text-4xl font-bold font-display mb-4">{t.home.ctaHeader}</h2>
-            <p className="text-blue-100 text-lg">{t.home.ctaSub}</p>
-          </div>
-          <div className="mt-12">
-            <Link to={`/${language}/contacto`} className="h-12 px-8 rounded-lg bg-white flex items-center text-primary text-base font-bold hover:bg-blue-50 transition-colors shadow-lg">
-              {t.home.ctaBtn}
-            </Link>
-          </div>
-        </m.div>
-      </section>
+
     </m.main>
     </LazyMotion>
   );
