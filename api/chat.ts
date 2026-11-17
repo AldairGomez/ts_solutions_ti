@@ -6,12 +6,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const apiKey = process.env.GROQ_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ 
+      error: 'La variable de entorno GROQ_API_KEY no está configurada en Vercel. Por favor, añádela en Vercel Dashboard > Project Settings > Environment Variables.' 
+    });
+  }
+
   try {
     const { message, history, language } = req.body;
     
-    // Configuramos el SDK de OpenAI para apuntar a la API ultrarrápida de Groq
+    // Configuramos el SDK de OpenAI para apuntar a la API de Groq
     const groq = new OpenAI({
-      apiKey: process.env.GROQ_API_KEY,
+      apiKey: apiKey,
       baseURL: "https://api.groq.com/openai/v1",
     });
 
@@ -36,16 +43,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     // Añadir el mensaje actual
     messages.push({ role: "user", content: message });
 
-    // Lista de modelos de Groq con fallback
+    // Lista de modelos activos y soportados en Groq con fallback
     const fallbackModels = [
-      "llama-3.1-8b-instant",       // Rápido, 14.4K rpm, 6K tpm
-      "qwen/qwen3.6-27b",           // Inteligente, 8K tpm
-      "llama-3.3-70b-versatile",    // Más lento pero inteligente, 12K tpm
-      "qwen/qwen3-32b"              // Alternativa extra
+      "openai/gpt-oss-20b",         // Ultrarrápido (~1000 tps), sustituto oficial moderno
+      "llama-3.3-70b-versatile",    // Muy capaz y preciso (128k contexto)
+      "llama-3.1-8b-instant",       // Rápido tradicional
+      "openai/gpt-oss-120b"         // Respaldo de alta capacidad
     ];
 
     let reply = "";
-    let lastError = null;
+    const errors: string[] = [];
 
     // Intentamos procesar el mensaje iterando por los modelos disponibles
     for (const currentModel of fallbackModels) {
@@ -54,7 +61,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           messages: messages as any,
           model: currentModel,
           temperature: 0.7,
-          max_tokens: 80, // Mantener respuestas cortas
+          max_tokens: 150, // Mantener respuestas concisas
         });
 
         reply = chatCompletion.choices[0]?.message?.content || "";
@@ -63,15 +70,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           break;
         }
       } catch (error: any) {
-        console.warn(`El modelo ${currentModel} falló (posible límite alcanzado). Saltando al siguiente... Error:`, error.message);
-        lastError = error;
-        // El bucle continuará con el siguiente modelo de la lista
+        console.warn(`El modelo ${currentModel} falló:`, error?.message);
+        errors.push(`${currentModel}: ${error?.message || error}`);
       }
     }
 
-    // Si pasamos por todos los modelos y reply sigue vacío, lanzamos el último error
+    // Si pasamos por todos los modelos y reply sigue vacío, enviamos los errores detallados
     if (!reply) {
-      throw lastError || new Error("Todos los modelos de respaldo fallaron por límites de velocidad o errores.");
+      throw new Error(`Todos los modelos de respaldo fallaron. Detalles: ${errors.join(" | ")}`);
     }
     
     return res.status(200).json({ reply });
